@@ -1,0 +1,29 @@
+.todo-item-cont {
+  width: 400px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0.5rem;
+  background-color: brown;
+}
+.todo-item-title {
+  flex: 2;
+  background-color: blueviolet;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.todo-item-title div {
+  background-color: chartreuse;
+  margin-left: 0.3rem;
+}
+.todo-item-edit-button {
+  flex: 1;
+  height: 100%;
+}
+.todo-item-delete-button {
+  flex: 1;
+  height: 100%;
+}

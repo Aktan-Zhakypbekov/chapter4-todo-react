@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import AddToDoForm from './modals/AddToDoForm';
+import EditToDoForm from './modals/EditToDoForm';
+import Display from './components/Display';
 
 function App() {
   const [todos, setTodos] = useState([
@@ -8,9 +10,16 @@ function App() {
     { id: Math.round(Math.random() * 100), title: 'Make todo project' },
   ]);
   let [addToDoFormOpen, setAddToDoFormOpen] = useState(false);
+  let [editToDoFormOpen, setEditToDoFormOpen] = useState(false);
 
   function toggleAddToDoForm() {
     setAddToDoFormOpen((prev) => {
+      prev = !prev;
+      return prev;
+    });
+  }
+  function toggleEditToDoForm() {
+    setEditToDoFormOpen((prev) => {
       prev = !prev;
       return prev;
     });
@@ -21,6 +30,9 @@ function App() {
       {addToDoFormOpen ? (
         <AddToDoForm toggleAddToDoForm={toggleAddToDoForm} />
       ) : null}
+      {editToDoFormOpen ? (
+        <EditToDoForm toggleEditToDoForm={toggleEditToDoForm} />
+      ) : null}
       <header className='header'>
         <h1>React To Do App</h1>
       </header>
@@ -28,7 +40,7 @@ function App() {
         <button className='add-todo-button' onClick={toggleAddToDoForm}>
           + Add todo
         </button>
-        <div className='todos-display'>Display</div>
+        <Display todos={todos} toggleEditToDoForm={toggleEditToDoForm} />
       </main>
       <footer className='footer'>Made by AZ</footer>
     </div>
