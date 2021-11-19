@@ -1,14 +1,22 @@
 import React from 'react';
 import ToDoItem from './ToDoItem';
 
-function Display({ todos, toggleEditToDoForm }) {
+function Display({
+  todos,
+  toggleEditToDoForm,
+  deleteToDoFromArray,
+  grabIdAndTitle,
+}) {
   return (
     <div className='display-cont'>
       {todos.map((elem) => {
         return (
           <ToDoItem
-            title={elem.title}
+            todo={elem}
             toggleEditToDoForm={toggleEditToDoForm}
+            deleteToDoFromArray={deleteToDoFromArray}
+            grabIdAndTitle={grabIdAndTitle}
+            key={elem.id}
           />
         );
       })}

@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddToDoForm from './modals/AddToDoForm';
 import EditToDoForm from './modals/EditToDoForm';
 import Display from './components/Display';
+import uniqid from 'uniqid';
 
 function App() {
-  const [todos, setTodos] = useState([
-    { id: Math.round(Math.random() * 100), title: 'Do groceries' },
-    { id: Math.round(Math.random() * 100), title: 'Do homework' },
-    { id: Math.round(Math.random() * 100), title: 'Make todo project' },
-  ]);
-  let [addToDoFormOpen, setAddToDoFormOpen] = useState(false);
-  let [editToDoFormOpen, setEditToDoFormOpen] = useState(false);
+  const [todos, setTodos] = useState([]);
+  const [addToDoFormOpen, setAddToDoFormOpen] = useState(false);
+  const [editToDoFormOpen, setEditToDoFormOpen] = useState(false);
+  const [idValue, setIdValue] = useState(null);
+  const [toDoTitle, setToDoTitle] = useState('');
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem('todos'))) {
+      setTodos(JSON.parse(localStorage.getItem('todos')));
+    } else {
+      localStorage.setItem('todos', JSON.stringify([]));
+      setTodos(JSON.parse(localStorage.getItem('todos')));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  });
+
+  function grabIdAndTitle(id, title) {
+    setIdValue(id);
+    setToDoTitle(title);
+  }
 
   function toggleAddToDoForm() {
     setAddToDoFormOpen((prev) => {
@@ -25,13 +42,44 @@ function App() {
     });
   }
 
+  function addToDoToArray(title) {
+    setTodos(
+      todos.concat({
+        id: uniqid(),
+        title: title,
+      })
+    );
+  }
+
+  function deleteToDoFromArray(id) {
+    setTodos(todos.filter((elem) => elem.id !== id));
+  }
+
+  function editToDoInArray(value) {
+    setTodos(
+      todos.map((elem) => {
+        if (elem.id === idValue) {
+          elem.title = value;
+        }
+        return elem;
+      })
+    );
+  }
+
   return (
     <div className='app-cont'>
       {addToDoFormOpen ? (
-        <AddToDoForm toggleAddToDoForm={toggleAddToDoForm} />
+        <AddToDoForm
+          toggleAddToDoForm={toggleAddToDoForm}
+          addToDoToArray={addToDoToArray}
+        />
       ) : null}
       {editToDoFormOpen ? (
-        <EditToDoForm toggleEditToDoForm={toggleEditToDoForm} />
+        <EditToDoForm
+          toggleEditToDoForm={toggleEditToDoForm}
+          editToDoInArray={editToDoInArray}
+          toDoTitle={toDoTitle}
+        />
       ) : null}
       <header className='header'>
         <h1>React To Do App</h1>
@@ -40,7 +88,12 @@ function App() {
         <button className='add-todo-button' onClick={toggleAddToDoForm}>
           + Add todo
         </button>
-        <Display todos={todos} toggleEditToDoForm={toggleEditToDoForm} />
+        <Display
+          todos={todos}
+          toggleEditToDoForm={toggleEditToDoForm}
+          deleteToDoFromArray={deleteToDoFromArray}
+          grabIdAndTitle={grabIdAndTitle}
+        />
       </main>
       <footer className='footer'>Made by AZ</footer>
     </div>
